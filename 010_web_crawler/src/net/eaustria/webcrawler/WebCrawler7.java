@@ -10,7 +10,6 @@ import java.util.concurrent.ForkJoinPool;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author bmayr
@@ -24,11 +23,12 @@ public class WebCrawler7 implements ILinkHandler {
 
     public WebCrawler7(String startingURL, int maxThreads) {
         this.url = startingURL;
-        // ToDo: Initialize "mainPool"        
+        this.mainPool = new ForkJoinPool(maxThreads);
     }
 
     private void startCrawling() {
-        // ToDo: Invoke LinkFinderAction on threadpool        
+        LinkFinderAction lfa = new LinkFinderAction(url, this);
+        mainPool.invoke(lfa);
     }
 
     @Override
@@ -56,7 +56,6 @@ public class WebCrawler7 implements ILinkHandler {
     // Just override - we do not need this methode when using forkJoinPool
     @Override
     public void queueLink(String link) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("HEII");// throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
-
