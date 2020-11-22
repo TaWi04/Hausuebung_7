@@ -20,6 +20,7 @@ public class WebCrawler7 implements ILinkHandler {
 //    private final Collection<String> visitedLinks = Collections.synchronizedList(new ArrayList<String>());
     private String url;
     private ForkJoinPool mainPool;
+    private long startTime = 0;
 
     public WebCrawler7(String startingURL, int maxThreads) {
         this.url = startingURL;
@@ -27,6 +28,7 @@ public class WebCrawler7 implements ILinkHandler {
     }
 
     private void startCrawling() {
+        startTime = (long) System.currentTimeMillis();
         LinkFinderAction lfa = new LinkFinderAction(url, this);
         mainPool.invoke(lfa);
     }
@@ -57,5 +59,9 @@ public class WebCrawler7 implements ILinkHandler {
     @Override
     public void queueLink(String link) throws Exception {
         System.out.println("HEII");// throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void printElapsedTime() {
+        System.out.println((System.currentTimeMillis() - startTime) + "ms");
     }
 }

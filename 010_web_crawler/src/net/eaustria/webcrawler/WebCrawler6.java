@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -21,11 +23,11 @@ public class WebCrawler6 implements ILinkHandler {
 //    private final Collection<String> visitedLinks = Collections.synchronizedList(new ArrayList<String>());
     private String url;
     private ExecutorService execService;
+    private long startTime;
 
     public WebCrawler6(String startingURL, int maxThreads) {
         this.url = startingURL;
-        // ToDo: Register a ThreadPool with "maxThreads" for execService
-        
+        execService = Executors.newFixedThreadPool(maxThreads);
     }
 
     @Override
@@ -49,11 +51,11 @@ public class WebCrawler6 implements ILinkHandler {
     }
 
     private void startNewThread(String link) throws Exception {
-        // ToDo: Use executer Service to start new LinkFinder Task!
-        
+        execService.execute(new LinkFinder(link, this));
     }
 
-    private void startCrawling() throws Exception {        
+    private void startCrawling() throws Exception {
+        startTime = System.currentTimeMillis();
         startNewThread(this.url);
     }
 
@@ -62,5 +64,9 @@ public class WebCrawler6 implements ILinkHandler {
      */
     public static void main(String[] args) throws Exception {
         new WebCrawler6("http://www.orf.at", 64).startCrawling();
+    }
+
+    public void printElapsedTime() {
+        System.out.println((System.currentTimeMillis() - startTime) + "ms");
     }
 }
